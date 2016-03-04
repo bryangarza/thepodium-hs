@@ -1,8 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Qwu.Html.Base where
+module Podium.Html.Base where
 
-import Qwu.Html.NewPost
+import Podium.Html.NewPost
 
 import Control.Monad
 import Lucid
@@ -10,7 +10,7 @@ import Lucid
 container :: Monad m => HtmlT m () -> HtmlT m ()
 container body =
   body_ (div_ [class_ "container"]
-         (do h1_ "Qwu"
+         (do h1_ "Podium"
              div_ [class_ "posts"] body))
 
 baseHtml :: Monad m => HtmlT m () -> HtmlT m ()
@@ -25,6 +25,6 @@ baseHtml body =
                   link_ [href_ "//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/css/bootstrap.min.css"
                         ,rel_ "stylesheet"
                         ,type_ "text/css"]
-                  title_ "Qwu")
+                  title_ "Podium")
         body_ (do newPost
                   container body))

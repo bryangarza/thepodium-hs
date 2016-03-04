@@ -1,6 +1,6 @@
-module Qwu.DB.Util where
+module Podium.DB.Util where
 
-import Qwu.DB.Connect
+import Podium.DB.Connect
 
 import Crypto.PasswordStore (makePassword)
 import Data.Int (Int64)

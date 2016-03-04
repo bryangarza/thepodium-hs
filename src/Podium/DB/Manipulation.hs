@@ -1,4 +1,4 @@
-module Qwu.DB.Manipulation (
+module Podium.DB.Manipulation (
     createPost
   , createAccount
   , deletePost
@@ -9,11 +9,11 @@ module Qwu.DB.Manipulation (
   , updateAccountPassword
   ) where
 
-import           Qwu.DB.Table.Post
-import qualified Qwu.DB.Table.Post      as Post
-import           Qwu.DB.Table.Account
-import qualified Qwu.DB.Table.Account   as Account
-import           Qwu.DB.Util
+import           Podium.DB.Table.Post
+import qualified Podium.DB.Table.Post      as Post
+import           Podium.DB.Table.Account
+import qualified Podium.DB.Table.Account   as Account
+import           Podium.DB.Util
 
 import           Control.Lens       (set, view)
 import           Data.ByteString    (ByteString)

@@ -1,9 +1,4 @@
-* qwu (twitter clone in haskell)
-- because why not.
-- ripped some parts of the db code from an unpublished project.
-- say hi [[https://twitter.com/bryangarza][@bryangarza]]
-
-
+* The Podium (backend)
 ** status
 |------------+-------------|
 | layer      | status      |

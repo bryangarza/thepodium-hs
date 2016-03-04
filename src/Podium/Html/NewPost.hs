@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Qwu.Html.NewPost where
+module Podium.Html.NewPost where
 
 import Control.Monad
 import Lucid

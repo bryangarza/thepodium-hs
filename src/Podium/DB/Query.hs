@@ -2,15 +2,16 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE NamedFieldPuns   #-}
 
-module Qwu.DB.Query where
+module Podium.DB.Query where
 
-import Qwu.DB.Connect
-import Qwu.DB.Table.Account (AccountId)
-import Qwu.DB.Table.Post
+import Podium.DB.Connect
+import Podium.DB.Table.Account (AccountId)
+import Podium.DB.Table.Post
 
 import qualified Data.UUID as U
 import Data.UUID
 import Control.Arrow                   (returnA)
+import Control.Lens                    (view)
 import Data.Profunctor.Product.Default (Default)
 import Database.PostgreSQL.Simple      (Connection)
 import Opaleye.PGTypes                 (pgUUID)
@@ -28,8 +29,8 @@ postQuery = queryTable table
 
 postByAccountId :: AccountId -> Query ColumnR
 postByAccountId idToMatch = proc () -> do
-  row@Post{accountId} <- postQuery -< ()
-  restrict -< accountId .== pgUUID idToMatch
+  row <- postQuery -< ()
+  restrict -< (view accountId row) .== pgUUID idToMatch
   returnA -< row
 
 runPostByAccountId :: IO [Post]

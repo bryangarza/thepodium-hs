@@ -1,6 +1,6 @@
 module Main where
 
-import Qwu.Api.Server
+import Podium.Api.Server
 
 import Network.Wai
 import Network.Wai.Handler.Warp

@@ -4,7 +4,7 @@
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TemplateHaskell       #-}
 
-module Qwu.DB.Table.Account where
+module Podium.DB.Table.Account where
 
 import GHC.Generics
 import Control.Lens (makeLenses)

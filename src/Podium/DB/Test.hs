@@ -1,9 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
-module Qwu.DB.Test where
+module Podium.DB.Test where
 
-import Qwu.DB.Manipulation
-import Qwu.DB.Table.Account
-import Qwu.DB.Table.Post
+import Podium.DB.Manipulation
+import Podium.DB.Table.Account
+import Podium.DB.Table.Post
 
 import Data.Default
 import Data.Text

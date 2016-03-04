@@ -4,9 +4,9 @@
 {-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE TemplateHaskell       #-}
 
-module Qwu.DB.Table.Post where
+module Podium.DB.Table.Post where
 
-import Qwu.DB.Table.Account (AccountId)
+import Podium.DB.Table.Account (AccountId)
 
 import GHC.Generics
 import Control.Lens (makeLenses)

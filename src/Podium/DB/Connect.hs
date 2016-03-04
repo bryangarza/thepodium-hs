@@ -1,4 +1,4 @@
-module Qwu.DB.Connect (pConnect) where
+module Podium.DB.Connect (pConnect) where
 
 import Database.PostgreSQL.Simple
 
