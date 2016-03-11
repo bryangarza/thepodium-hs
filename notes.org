@@ -1,5 +1,5 @@
 * Fields
-** Profile
+** Account
 - first name
 - last name
 - picture
@@ -7,7 +7,7 @@
 - short bio
 - date joined
 - password
-- location (city, state)
+- location (open-ended text field)
 - profession
 - experience (in terms of time)
 - interests/passions
