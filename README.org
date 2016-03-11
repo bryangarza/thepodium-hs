@@ -9,16 +9,15 @@
 | db queries | in progress |
 |------------+-------------|
 | rest api   | in progress |
-| frontend   | in progress |
 |------------+-------------|
 
 ** important libraries
 - opaleye (postgres)
 - servant (api)
-- lucid (html edsl)
-- clay (css edsl)
+- aeson (JSON)
 
 ** routes
+TODO: Update this with currently planned routes
 |---------------------+----------------------------+------+-------|
 | uri                 | desc                       | type | auth? |
 |---------------------+----------------------------+------+-------|
