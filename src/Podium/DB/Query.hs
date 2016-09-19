@@ -41,5 +41,5 @@ runPostByAccountId =
       where runPostByAccountId' :: Connection -> Query ColumnR -> IO [Post]
             runPostByAccountId' = runQuery
 
-printSql :: Default Unpackspec a a => Query a -> IO ()
-printSql = putStrLn . showSqlForPostgres
+-- printSql :: Default Unpackspec a a => Query a -> IO ()
+-- printSql = putStrLn . showSqlForPostgres

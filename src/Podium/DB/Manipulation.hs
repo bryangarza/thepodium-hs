@@ -1,3 +1,6 @@
+{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+
 module Podium.DB.Manipulation (
     createPost
   , createAccount
@@ -10,15 +13,18 @@ module Podium.DB.Manipulation (
   ) where
 
 import           Podium.DB.Table.Post
-import qualified Podium.DB.Table.Post      as Post
+import qualified Podium.DB.Table.Post    as Post
 import           Podium.DB.Table.Account
-import qualified Podium.DB.Table.Account   as Account
+import qualified Podium.DB.Table.Account as Account
 import           Podium.DB.Util
 
 import           Control.Lens       (set, view)
 import           Data.ByteString    (ByteString)
 import           Data.Text.Encoding (encodeUtf8, decodeUtf8)
 import           Data.Time.Clock    (getCurrentTime)
+import Opaleye.Constant (Constant,constant)
+import Opaleye.Internal.Column (Column(Column),unColumn)
+import qualified Opaleye.Internal.HaskellDB.PrimQuery as HPQ
 import Opaleye
   ( (.==)
   , runDelete
@@ -29,7 +35,8 @@ import Opaleye.PGTypes
   ( pgStrictText
   , pgInt4
   , pgUUID
-  , pgUTCTime )
+  , pgUTCTime
+  , pgArray )
 
 createPost :: Post -> AccountId -> IO ()
 createPost p accountId =
@@ -57,17 +64,27 @@ deletePost idToMatch = runWithConn runDelete Post.table match
   where
     match = (.== pgInt4 idToMatch) . view postId
 
+-- pgArray :: forall a b. Default Constant a (Column b) => [a] -> Column (PGArray b)
+-- pgArray = Column . HPQ.ArrayExpr . fmap ( unColumn . (constant :: a -> Column b))
+
 createAccount :: Account -> IO ()
-createAccount (Account accountId username email password) =
+-- createAccount (Account accountId username email password) =
+createAccount Account {..} =
   do
     accountId <- genUuid
-    hash      <- genPassword (encodeUtf8 password)
+    hash      <- genPassword (encodeUtf8 _password)
     runWithConn runInsert Account.table (columns hash)
   where
-    accountId' = pgUUID accountId
-    username' = pgStrictText username
-    email' = pgStrictText email
-    columns hash = Account accountId' username' email' hash'
+    accountId'   = pgUUID       _accountId
+    username'    = pgStrictText _username
+    email'       = pgStrictText _email
+    bio'         = pgStrictText _bio
+    joinDate'    = pgUTCTime    _joinDate
+    location'    = pgStrictText _location
+    profession'  = pgStrictText _profession
+    yearsOfExp'  = pgInt4       _yearsOfExp
+    interests'   = pgArray pgStrictText _interests
+    columns hash = Account accountId' username' email' hash' bio' joinDate' location' profession' yearsOfExp' interests'
       where hash' = pgStrictText (decodeUtf8 hash)
 
 updateAccountField :: (Account.ColumnR -> Account.ColumnW) -> AccountId -> IO ()

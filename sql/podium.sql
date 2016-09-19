@@ -1,15 +1,21 @@
 CREATE TABLE "accountTable" (
-       "accountId" UUID  PRIMARY KEY,
-       "username"  TEXT  NOT NULL,
-       "email"     TEXT  NOT NULL,
-       "password"  TEXT  NOT NULL
+       "accountId"  UUID        PRIMARY KEY,
+       "username"   TEXT        NOT NULL,
+       "email"      TEXT        NOT NULL,
+       "password"   TEXT        NOT NULL,
+       "bio"        TEXT        NOT NULL,
+       "joinDate"   TIMESTAMPTZ NOT NULL,
+       "location"   TEXT        NOT NULL,
+       "profession" TEXT        NOT NULL,
+       "yearsOfExp" INT4        NOT NULL,
+       "interests"  TEXT[]      NOT NULL
 );
 
 CREATE TABLE "postTable" (
        "postId"    SERIAL      PRIMARY KEY,
        "body"      TEXT        NOT NULL,
-       "ts"        TIMESTAMPTZ NOT NULL
-       "accountId" UUID        REFERENCES "accountTable" ON DELETE CASCADE,
+       "ts"        TIMESTAMPTZ NOT NULL,
+       "accountId" UUID        REFERENCES "accountTable" ON DELETE CASCADE
 );
 
 

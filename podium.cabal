@@ -34,6 +34,7 @@ library
                      , lens
                      , lucid
                      , mtl
+                     , resource-pool
                      , opaleye
                      , postgresql-simple
                      , product-profunctors

@@ -44,17 +44,16 @@ data Account' a b c d e f g h i j = Account
     , _email      :: c
     , _password   :: d
     , _bio        :: e
-    , _joindate   :: f
+    , _joinDate   :: f
     , _location   :: g
     , _profession :: h
-    , _yearsofexp :: i
+    , _yearsOfExp :: i
     , _interests  :: j
     } deriving (Eq, Show, Generic)
 
 makeLenses ''Account'
 
-type Account =
-  Account'
+type Account = Account'
   AccountId
   Username
   Email
@@ -66,7 +65,7 @@ type Account =
   YearsOfExp
   Interests
 
-instance ToJSON Account
+-- instance ToJSON Account
 
 instance Default Account where
   def =
@@ -117,8 +116,8 @@ table = Table "accountTable" (
                    , _email      = required "email"
                    , _password   = required "password"
                    , _bio        = required "bio"
-                   , _joindate   = required "joindate"
+                   , _joinDate   = required "joinDate"
                    , _location   = required "location"
                    , _profession = required "profession"
-                   , _yearsofexp = required "yearsofexp"
+                   , _yearsOfExp = required "yearsOfExp"
                    , _interests  = required "interests"  })
