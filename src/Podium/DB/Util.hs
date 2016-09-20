@@ -10,6 +10,11 @@ import Data.UUID.V4 (nextRandom)
 import Database.PostgreSQL.Simple (Connection, close)
 
 --import Control.Monad.Managed
+import Control.Monad.Trans.Reader
+import Data.Pool
+
+-- Performs a database action by using a pooled connection in the environment
+type Database a = ReaderT (Pool Connection) IO a
 
 genUuid :: IO UUID
 genUuid = nextRandom
@@ -41,12 +46,12 @@ genPassword x = makePassword x 18
 --     runManaged $ p $managed (action x y)
 --     close conn
 
-runWithConn3 :: (Connection -> t2 -> t3 -> t4 -> IO Int64) -> t2 -> t3 -> t4 -> IO ()
-runWithConn3 action x y z =
-  do
-    conn <- pConnect
-    action conn x y z
-    close conn
+-- runWithConn3 :: (Connection -> t2 -> t3 -> t4 -> IO Int64) -> t2 -> t3 -> t4 -> IO ()
+-- runWithConn3 action x y z =
+--   do
+--     conn <- pConnect
+--     action conn x y z
+--     close conn
 
 -- runConnected (Connected Int64)
 --   a <*> b <*> c

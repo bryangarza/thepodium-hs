@@ -34,6 +34,7 @@ library
                      , lens
                      , lucid
                      , mtl
+                     , transformers
                      , resource-pool
                      , opaleye
                      , postgresql-simple
