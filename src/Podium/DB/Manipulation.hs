@@ -41,10 +41,10 @@ import           Opaleye.PGTypes ( pgStrictText
 import Control.Monad.Trans.Reader
 import Control.Monad.Trans.Class
 import Control.Monad.IO.Class
+import Data.Int (Int64)
 import Data.Pool
--- type Database a = ReaderT (Pool Connection) IO a
 
-createPost :: Post -> AccountId -> Database ()
+createPost :: Post -> AccountId -> Database Int64
 createPost p accountId =
   do
     timestamp <- liftIO getCurrentTime
@@ -55,7 +55,7 @@ createPost p accountId =
     accountId' = pgUUID accountId
     columns t  = Post Nothing body' (pgUTCTime t) accountId'
 
-updatePostField :: (Post.ColumnW -> Post.ColumnW) -> PostId -> Database ()
+updatePostField :: (Post.ColumnW -> Post.ColumnW) -> PostId -> Database Int64
 updatePostField update idToMatch = do
   pool <- ask
   lift $ withResource pool (\conn -> runUpdate conn Post.table update' match)
@@ -64,10 +64,10 @@ updatePostField update idToMatch = do
     update' = update . set postId (Just idToMatch')
     match = (.== idToMatch') . view postId
 
-updatePostBody :: Body -> PostId -> IO ()
+updatePostBody :: Body -> PostId -> Database Int64
 updatePostBody = updatePostField . set body . pgStrictText
 
-deletePost :: PostId -> Database ()
+deletePost :: PostId -> Database Int64
 deletePost idToMatch = ask >>= lift . flip withResource (\conn -> runDelete conn Post.table match)
   where
     match = (.== pgInt4 idToMatch) . view postId
@@ -75,7 +75,7 @@ deletePost idToMatch = ask >>= lift . flip withResource (\conn -> runDelete conn
 -- pgArray :: forall a b. Default Constant a (Column b) => [a] -> Column (PGArray b)
 -- pgArray = Column . HPQ.ArrayExpr . fmap ( unColumn . (constant :: a -> Column b))
 
-createAccount :: Account -> Database ()
+createAccount :: Account -> Database Int64
 -- createAccount (Account accountId username email password) =
 createAccount Account {..} =
   do
@@ -96,20 +96,20 @@ createAccount Account {..} =
     columns hash = Account accountId' username' email' hash' bio' joinDate' location' profession' yearsOfExp' interests'
       where hash' = pgStrictText (decodeUtf8 hash)
 
-updateAccountField :: (Account.ColumnR -> Account.ColumnW) -> AccountId -> Database ()
+updateAccountField :: (Account.ColumnR -> Account.ColumnW) -> AccountId -> Database Int64
 updateAccountField update idToMatch = do
   pool <- ask
   lift $ withResource pool (\conn -> runUpdate conn Account.table update match)
   where
     match = (.== pgUUID idToMatch) . view Account.accountId
 
-updateAccountUsername :: Username -> AccountId -> IO ()
+updateAccountUsername :: Username -> AccountId -> Database Int64
 updateAccountUsername = updateAccountField . set username . pgStrictText
 
-updateAccountEmail :: Email -> AccountId -> IO ()
+updateAccountEmail :: Email -> AccountId -> Database Int64
 updateAccountEmail = updateAccountField . set email . pgStrictText
 
-updateAccountPassword :: Password -> AccountId -> IO ()
+updateAccountPassword :: Password -> AccountId -> Database Int64
 updateAccountPassword newPassword accountId =
   do
     hash <- genPassword (encodeUtf8 newPassword)
@@ -118,7 +118,7 @@ updateAccountPassword newPassword accountId =
     update :: ByteString -> Account.ColumnR -> Account.ColumnW
     update = set password . pgStrictText . decodeUtf8
 
-deleteAccount :: AccountId -> Database()
+deleteAccount :: AccountId -> Database Int64
 deleteAccount idToMatch = ask >>= lift . flip withResource (\conn -> runDelete conn Account.table match)
   where
     match = (.== pgUUID idToMatch) . view Account.accountId
