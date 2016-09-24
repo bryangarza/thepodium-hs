@@ -76,11 +76,10 @@ deletePost idToMatch = ask >>= lift . flip withResource (\conn -> runDelete conn
 -- pgArray = Column . HPQ.ArrayExpr . fmap ( unColumn . (constant :: a -> Column b))
 
 createAccount :: Account -> Database Int64
--- createAccount (Account accountId username email password) =
 createAccount Account {..} =
   do
-    accountId <- genUuid
-    hash      <- genPassword (encodeUtf8 _password)
+    accountId <- liftIO genUuid
+    hash      <- liftIO $ genPassword (encodeUtf8 _password)
     pool      <- ask
     lift $ withResource pool (\conn -> runInsert conn Account.table (columns hash))
   where
@@ -112,7 +111,7 @@ updateAccountEmail = updateAccountField . set email . pgStrictText
 updateAccountPassword :: Password -> AccountId -> Database Int64
 updateAccountPassword newPassword accountId =
   do
-    hash <- genPassword (encodeUtf8 newPassword)
+    hash <- liftIO $ genPassword (encodeUtf8 newPassword)
     updateAccountField (update hash) accountId
   where
     update :: ByteString -> Account.ColumnR -> Account.ColumnW

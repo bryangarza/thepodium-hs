@@ -34,7 +34,8 @@ server = posts
     posts = liftIO runPostByAccountId
     newpost :: [(Text, Text)] -> EitherT ServantErr IO [P.Post]
     newpost [(_, fieldData)] = do
-      liftIO (createPost (set P.body fieldData (def :: P.Post)) U.nil)
+      -- TODO: Make this typecheck:
+      -- liftIO (createPost (set P.body fieldData (def :: P.Post)) U.nil)
       liftIO runPostByAccountId
 
 app :: Application
