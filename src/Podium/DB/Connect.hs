@@ -1,4 +1,4 @@
-module Podium.DB.Connect (pConnect) where
+module Podium.DB.Connect (mkPooledConnection) where
 
 import Database.PostgreSQL.Simple
 import Data.Pool
@@ -11,9 +11,6 @@ myConnectInfo = ConnectInfo
   , connectPassword = ""
   , connectDatabase = "qwu"
   }
-
-pConnect :: IO Connection
-pConnect = connect myConnectInfo
 
 mkPooledConnection :: IO (Pool Connection)
 mkPooledConnection =
