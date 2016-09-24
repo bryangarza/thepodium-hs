@@ -39,9 +39,9 @@ postByAccountId idToMatch = proc () -> do
   restrict -< (view accountId row) .== pgUUID idToMatch
   returnA -< row
 
-runPostByAccountId :: Database [Post]
-runPostByAccountId =
-  lift . flip withResource (\conn -> runQuery conn (postByAccountId U.nil)) =<< ask
+runPostByAccountId :: AccountId -> Database [Post]
+runPostByAccountId myId =
+  lift . flip withResource (\conn -> runQuery conn (postByAccountId myId)) =<< ask
 
 -- printSql :: Default Unpackspec a a => Query a -> IO ()
 -- printSql = putStrLn . showSqlForPostgres

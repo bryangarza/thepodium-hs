@@ -24,7 +24,12 @@ import Opaleye
   , PGTimestamptz
   , PGUuid
   , required
-  , Table(Table) )
+  , Table(Table)
+  )
+import Servant.Common.Text (FromText, fromText)
+
+instance FromText UUID where
+  fromText = U.fromText
 
 type AccountId  = UUID
 type Username   = Text
