@@ -9,7 +9,7 @@ myConnectInfo = ConnectInfo
   , connectPort     = 5432
   , connectUser     = "bryangarza"
   , connectPassword = ""
-  , connectDatabase = "qwu"
+  , connectDatabase = "podium"
   }
 
 mkPooledConnection :: IO (Pool Connection)
