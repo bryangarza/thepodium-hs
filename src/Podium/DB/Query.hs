@@ -4,6 +4,7 @@
 
 module Podium.DB.Query where
 
+import Podium.DB.Util
 import Podium.DB.Connect
 import Podium.DB.Table.Account (AccountId)
 import Podium.DB.Table.Post
@@ -12,7 +13,8 @@ import qualified Data.UUID as U
 import Data.UUID
 import Control.Arrow                   (returnA)
 import Control.Lens                    (view)
-import Control.Monad.Trans             (liftIO)
+import Control.Monad.Trans.Reader      (ask)
+import Control.Monad.Trans.Class       (lift)
 import Data.Profunctor.Product.Default (Default)
 import Database.PostgreSQL.Simple      (Connection)
 import Opaleye.PGTypes                 (pgUUID)
@@ -37,9 +39,9 @@ postByAccountId idToMatch = proc () -> do
   restrict -< (view accountId row) .== pgUUID idToMatch
   returnA -< row
 
-runPostByAccountId :: Pool Connection -> IO [Post]
+runPostByAccountId :: Database [Post]
 runPostByAccountId =
-  liftIO . flip withResource (\c -> runQuery c $ postByAccountId U.nil)
+  lift . flip withResource (\conn -> runQuery conn (postByAccountId U.nil)) =<< ask
 
 -- printSql :: Default Unpackspec a a => Query a -> IO ()
 -- printSql = putStrLn . showSqlForPostgres

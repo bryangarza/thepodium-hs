@@ -36,11 +36,11 @@ server conn = posts
     :<|> newpost
   where
     posts :: EitherT ServantErr IO [P.Post]
-    posts = liftIO $ runPostByAccountId conn
+    posts = liftIO $ runReaderT runPostByAccountId conn
     newpost :: [(Text, Text)] -> EitherT ServantErr IO [P.Post]
     newpost [(_, fieldData)] = do
       liftIO $ runReaderT (createPost (set P.body fieldData (def :: P.Post)) U.nil) conn
-      liftIO $ runPostByAccountId conn
+      liftIO $ runReaderT runPostByAccountId conn
 
 app :: Pool Connection -> Application
 app = logStdoutDev . serve myApi . server
