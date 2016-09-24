@@ -64,6 +64,7 @@ executable podium
                      , lens
                      , lucid
                      , mtl
+                     , transformers
                      , opaleye
                      , postgresql-simple
                      , product-profunctors

@@ -12,6 +12,7 @@ import qualified Data.UUID as U
 import Data.UUID
 import Control.Arrow                   (returnA)
 import Control.Lens                    (view)
+import Control.Monad.Trans             (liftIO)
 import Data.Profunctor.Product.Default (Default)
 import Database.PostgreSQL.Simple      (Connection)
 import Opaleye.PGTypes                 (pgUUID)
@@ -24,6 +25,9 @@ import Opaleye
   , showSqlForPostgres
   , Unpackspec )
 
+import Database.PostgreSQL.Simple (Connection)
+import Data.Pool
+
 postQuery :: Query ColumnR
 postQuery = queryTable table
 
@@ -33,13 +37,9 @@ postByAccountId idToMatch = proc () -> do
   restrict -< (view accountId row) .== pgUUID idToMatch
   returnA -< row
 
-runPostByAccountId :: IO [Post]
+runPostByAccountId :: Pool Connection -> IO [Post]
 runPostByAccountId =
-  do
-    conn <- pConnect
-    runPostByAccountId' conn (postByAccountId U.nil)
-      where runPostByAccountId' :: Connection -> Query ColumnR -> IO [Post]
-            runPostByAccountId' = runQuery
+  liftIO . flip withResource (\c -> runQuery c $ postByAccountId U.nil)
 
 -- printSql :: Default Unpackspec a a => Query a -> IO ()
 -- printSql = putStrLn . showSqlForPostgres
