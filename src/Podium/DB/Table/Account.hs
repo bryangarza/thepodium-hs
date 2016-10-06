@@ -70,7 +70,7 @@ type Account = Account'
   YearsOfExp
   Interests
 
--- instance ToJSON Account
+instance ToJSON Account
 
 instance Default Account where
   def =
