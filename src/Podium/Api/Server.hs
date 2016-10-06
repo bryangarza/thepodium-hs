@@ -28,7 +28,7 @@ import Data.Pool
 
 type MyApi = "account" :> Capture "accountId" AccountId :> Get '[JSON] [Account]
         :<|> "posts" :> Capture "accountId" AccountId :> Get '[JSON, HTML] [P.Post]
-        :<|> "newpost" :> Capture "accountId" AccountId :> ReqBody '[FormUrlEncoded] [(Text, Text)] :> Post '[JSON, HTML] [P.Post]
+        :<|> "new_post" :> Capture "accountId" AccountId :> ReqBody '[FormUrlEncoded] [(Text, Text)] :> Post '[JSON, HTML] [P.Post]
 
 myApi :: Proxy MyApi
 myApi = Proxy
@@ -36,14 +36,14 @@ myApi = Proxy
 server :: Pool Connection -> Server MyApi
 server conn = account
     :<|> posts
-    :<|> newpost
+    :<|> newPost
   where
     account :: AccountId -> EitherT ServantErr IO [Account]
     account accountId = liftIO $ runReaderT (runAccountByAccountId accountId) conn
     posts :: AccountId -> EitherT ServantErr IO [P.Post]
     posts accountId = liftIO $ runReaderT (runPostByAccountId accountId) conn
-    newpost :: AccountId -> [(Text, Text)] -> EitherT ServantErr IO [P.Post]
-    newpost accountId [(_, fieldData)] = do
+    newPost :: AccountId -> [(Text, Text)] -> EitherT ServantErr IO [P.Post]
+    newPost accountId [(_, fieldData)] = do
       liftIO $ runReaderT (createPost (set P.body fieldData (def :: P.Post)) accountId) conn
       liftIO $ runReaderT (runPostByAccountId accountId) conn
 
